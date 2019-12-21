@@ -12,10 +12,16 @@ The goal of this module is to provide a starting point for bots of all sizes. Yu
 
 ### Installation
 
+Yuuko expects Eris to be installed as a peer dependency, which allows you to use any forward-compatible Eris version without having to wait for an update to Yuuko. You can install both at once with the following commands:
+
 ```bash
-$ yarn add yuuko # yarn
-$ npm install --save yuuko # npm
+$ yarn add yuuko eris # yarn
+$ npm install --save yuuko eris # npm
 ```
+
+#### Development builds
+
+All commits to Yuuko are automatically built to a separate branch to make installing development builds from Github easy. If you want to get builds from the `dev` branch, install Yuuko via `github:Geo1088/yuuko#builds/dev`. Remember to grab your Eris version of choice as well.
 
 ### Ping-pong example
 

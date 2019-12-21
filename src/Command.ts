@@ -44,7 +44,7 @@ export interface CommandRequirements {
 	// TODO: use a union of all the string literals we could possibly put here
 	permissions?: string | string[];
 	/** A custom function that must return true to enable the command. */
-	custom?(msg: object, args: string[], ctx: CommandContext): boolean | Promise<boolean>;
+	custom?(msg: Eris.Message, args: string[], ctx: CommandContext): boolean | Promise<boolean>;
 }
 
 /** An object containing context information for processing a command. */
@@ -76,14 +76,11 @@ export interface CommandProcess {
 
 /** Class representing a command. */
 export class Command {
-	/** The command's name. */
-	name: string;
-
 	/**
-	 * A list of aliases that can be used to call the command in addition to
-	 * its name.
+	 * A list of the command's names. The first should be considered the
+	 * command's canonical or display name.
 	 */
-	aliases: string[];
+	names: string[];
 
 	/** The function executed when the command is triggered. */
 	process: CommandProcess;
@@ -94,17 +91,13 @@ export class Command {
 	/** The name of the file the command was loaded from, if any. */
 	filename?: string;
 
-	constructor (name: string | string[], process: CommandProcess, requirements?: CommandRequirements) {
-		if (Array.isArray(name)) {
-			const firstName = name.shift();
-			if (firstName === undefined) throw new TypeError('At least one name is required');
-			this.name = firstName;
-			this.aliases = name;
+	constructor (names: string | string[], process: CommandProcess, requirements?: CommandRequirements) {
+		if (Array.isArray(names)) {
+			this.names = names;
 		} else {
-			this.name = name;
-			this.aliases = [];
+			this.names = [names];
 		}
-		if (!this.name) throw new TypeError('Name is required');
+		if (!this.names[0]) throw new TypeError('At least one name is required');
 		this.process = process;
 		if (!this.process) throw new TypeError('Process is required');
 		this.requirements = {};
@@ -136,10 +129,5 @@ export class Command {
 		if (!await this.checkPermissions(msg, args, ctx)) return false;
 		this.process(msg, args, ctx);
 		return true;
-	}
-
-	/** All names the command is callable by. */
-	get names (): string[] {
-		return [this.name, ...this.aliases];
 	}
 }
