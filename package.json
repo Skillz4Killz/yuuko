@@ -22,6 +22,7 @@
   },
   "homepage": "https://geo1088.github.io/yuuko",
   "dependencies": {
+    "fs-readdir-recursive": "^1.1.0",
     "glob": "^7.1.3"
   },
   "devDependencies": {

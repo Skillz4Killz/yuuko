@@ -1,7 +1,7 @@
 /** @module Yuuko */
 
 import * as Eris from 'eris';
-import * as glob from 'glob';
+import fsreaddir from 'fs-readdir-recursive'
 import {Command} from './Yuuko';
 // TODO: PartialCommandContext is only used in this file, should be defined here
 import {CommandRequirements, PartialCommandContext, CommandContext} from './Command';
@@ -230,8 +230,7 @@ export class Client extends Eris.Client implements ClientOptions {
 	/** Load the files in a directory and attempt to add a command from each. */
 	addCommandDir (dirname: string): this {
 		if (!dirname.endsWith('/')) dirname += '/';
-		const pattern = `${dirname}*.[tj]s`;
-		const filenames = glob.sync(pattern);
+		const filenames = fsreaddir(dirname, (name: string) => !name.startsWith('.') && name.endsWith('.js'))
 		for (const filename of filenames) {
 			this.addCommandFile(filename);
 		}
